@@ -18,4 +18,9 @@ class PersonController {
     
     private let baseURL = URL(string: "https://lambdaswapi.herokuapp.com")!
     private lazy var peopleURL = URL(string: "/api/people", relativeTo: baseURL)!
+    var people:[Person] = []
+    
+    func searchForPeople(searchTerm: String, completion: @escaping () -> Void) {
+        
+    }
 }
