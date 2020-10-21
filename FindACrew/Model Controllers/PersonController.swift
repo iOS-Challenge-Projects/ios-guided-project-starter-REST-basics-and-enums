@@ -20,11 +20,11 @@ class PersonController {
     //1.Base URL
     private let baseURL = URL(string: "https://lambdaswapi.herokuapp.com")!
     
-    //2.Add directory base on documentations
+    //2.Add extension to the baseURL (read documentations)
     private lazy var peopleURL = URL(string: "/api/people", relativeTo: baseURL)!
     
     
-    //Request data functions
+    //Fetching data functions
     func searchForPeople(searchTerm: String, completion: @escaping () -> Void) {
         
         
@@ -43,6 +43,48 @@ class PersonController {
             completion()//Call completion to let user know of an error
             return
         }
+        
+        //HTTP request type
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = HTTPMethod.get.rawValue
+        
+        //Data task
+        URLSession.shared.dataTask(with: request) {[weak self] data, response, error in
+            //Check if there is an error
+            if let error = error {
+                print("Error fetching data:  \(error)")
+                completion()
+                return
+            }
+        
+            guard let self = self else {
+                return
+            }
+            
+            guard let data = data else{
+                print("No data")
+                completion()
+                return
+            }
+            
+            
+            //At this point we know we have data so we will decode it into our model
+            let jsonDecoder = JSONDecoder()
+            
+            do{
+                let personSearch = try jsonDecoder.decode(PersonSearch.self, from: data)
+                self.people.append(contentsOf: personSearch.results)
+            }catch{
+                print("Error decoding data \(error)")
+                completion()
+            }
+            //At this point everything worked so we can access the person array 
+            completion()
+            
+        
+            
+        }.resume()
+        
         
         
     }
