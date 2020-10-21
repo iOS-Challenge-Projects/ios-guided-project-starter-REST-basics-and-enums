@@ -28,6 +28,6 @@ class PersonTableViewCell: UITableViewCell {
         
         nameLabel.text = person.name
         heightLabel.text = "\(person.height) cm"
-        birthYearLabel.text = "Born \(person.birthYear)"
+        birthYearLabel.text = "Born \(person.birth_year)"
     }
 }
